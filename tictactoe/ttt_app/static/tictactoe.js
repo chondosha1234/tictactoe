@@ -1,8 +1,8 @@
 
 const statusDisplay = document.querySelector('.game-status');
+const playerData = document.querySelector('.player-names');
 
 let gameActive = true;
-let currentPlayer = "X";
 let gameState = ["", "", "", "", "", "", "", "", ""];
 
 const winningConditions = [
@@ -16,8 +16,21 @@ const winningConditions = [
   [2,4,6]
 ];
 
+let playerx = {
+  "name": playerData.getAttribute('data-playerx'),
+  "team": "X"
+};
+let playero = {
+  "name": playerData.getAttribute('data-playero'),
+  "team": "O"
+};
+
+let currentPlayer = playerx;
+
+
+
 function winningMessage() {
-  return `Player ${currentPlayer} has won!`;
+  return `Player ${currentPlayer.name} has won!`;
 }
 
 function drawMessage() {
@@ -25,32 +38,29 @@ function drawMessage() {
 }
 
 function currentPlayerTurn() {
-  return `It is ${currentPlayer}'s turn!`;
+  return `It is ${currentPlayer.name}'s turn!`;
 }
 
 statusDisplay.innerHTML = currentPlayerTurn();
 
 
 function playCell(clickedCell, clickedCellIndex) {
-  console.log("inside play cell");
-  gameState[clickedCellIndex] = currentPlayer;
-  clickedCell.innerHTML = currentPlayer;
+  gameState[clickedCellIndex] = currentPlayer.team;
+  clickedCell.innerHTML = currentPlayer.team;
 }
 
 
 function changePlayer() {
-  console.log("inside changeplayer");
-  if (currentPlayer === "X"){
-    currentPlayer = "O";
+  if (currentPlayer.team === "X"){
+    currentPlayer = playero;
   }else{
-    currentPlayer = "X";
+    currentPlayer = playerx;
   }
   statusDisplay.innerHTML = currentPlayerTurn();
 }
 
 
 function validateResult(){
-  console.log("inside validate result");
   let gameOver = false;
   for (let i = 0; i <= 7; i++){
     const condition = winningConditions[i];
@@ -84,7 +94,6 @@ function validateResult(){
 
 
 function clickCell(cellEvent) {
-  console.log("inside click cell");
   const clickedCell = cellEvent.target;
   const cellIndex = parseInt(clickedCell.getAttribute('data-cell-index'));
 
@@ -95,13 +104,12 @@ function clickCell(cellEvent) {
 }
 
 function restartGame() {
-  console.log("inside restart");
   gameActive = true;
-  currentPlayer = "X";
+  currentPlayer = playerx;
   gameState = ["", "", "", "", "", "", "", "", ""];
   statusDisplay.innerHTML = currentPlayerTurn();
   document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = "");
 }
 
 document.querySelectorAll('.cell').forEach(cell => cell.addEventListener('click', clickCell));
-document.querySelector('.game-reset').addEventListener('click', restartGame);
+document.querySelector('.restart-btn').addEventListener('click', restartGame);
